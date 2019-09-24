@@ -53,7 +53,6 @@ sendLaserHit(data) {
   const buffer = fp.encode('laserHit', data);
   this.socket.emit('laserHit', buffer);
 }
-
 ```
 
 ### server/server_socket.js
@@ -74,23 +73,22 @@ recvLaserHit(buffer) {
 }
 ```
 
-## Additional Usage
+## Additional Features
 
-Filepack can also list all the available events, which are stored as unique integers, so rather than sharing an event string through the socket, we can refrence an event with an integer.
+Flatpack can also list all the available events as unique integers, so rather than sharing an named event string through the socket, we can refrence an event with an integer.
 
 ```
-const EVENTS = fp.list();
+import { fp } from '../shared/socket_helper.js';
 
-// SEND
+const EVENTS = fp.list();
 
 sendLaserFire(data) {
   const buffer = fp.encode(EVENTS.laserFire, data);
   this.socket.emit(EVENTS.laserFire, buffer);
 }
 
-// RECEIVE
+socket.on(EVENTS.laserFire, buffer => this.recvLaserFire(buffer));
 
-socket.on(EVENTS.laserFire, (buffer) => this.recvLaserFire(socket, buffer))
 recvLaserFire(buffer) {
   const data = fp.decode(EVENTS.laserFire, buffer);
   this.game.handleLaserFire(data);
